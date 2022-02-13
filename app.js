@@ -41,7 +41,7 @@ app.post("/login", (req, res) => {
 
   const code = req.body.code
   const spotifyApi = new SpotifywebApi({
-    redirectUri: "http://localhost:3000",
+    redirectUri: "https://spotify-r.herokuapp.com/",
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET
   })
