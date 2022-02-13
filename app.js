@@ -17,7 +17,7 @@ app.use('/musics', musicsRouter);
 app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken
   const spotifyApi = new SpotifywebApi({
-    redirectUri: process.env.REDIRECT_URI,
+    redirectUri: "https://spotify-r.herokuapp.com/",
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     refreshToken,
