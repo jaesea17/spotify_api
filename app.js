@@ -14,36 +14,22 @@ app.use(cors());
 //Route middlewear
 app.use('/musics', musicsRouter);
 
-app.post("/refresh", (req, res) => {
-  const refreshToken = req.body.refreshToken
-  const spotifyApi = new SpotifywebApi({
-    redirectUri: "https://spotify-r.herokuapp.com/",
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    refreshToken,
-  })
-
-  spotifyApi
-    .refreshAccessToken()
-    .then(data => {
-      res.json({
-        accessToken: data.body.accessToken,
-        expiresIn: data.body.expiresIn,
-      })
-    })
-    .catch(err => {
-      console.log(err)
-      res.sendStatus(400)
-    })
+//getting user credentials
+let clientId;
+let clientSecret;
+app.post('/credentials', (req, res) => {
+  clientId = req.body.clientId;
+  clientSecret = req.body.clientSecret;
+  res.send("success")
 })
 
 app.post("/login", (req, res) => {
 
   const code = req.body.code
   const spotifyApi = new SpotifywebApi({
-    redirectUri: "https://spotify-r.herokuapp.com/",
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET
+    redirectUri: "http://localhost:3000",
+    clientId: clientId,
+    clientSecret: clientSecret
   })
 
 
@@ -59,17 +45,34 @@ app.post("/login", (req, res) => {
   })
 })
 
-app.get('/', (req, res) => {
+  app.post("/refresh", (req, res) => {
+    const refreshToken = req.body.refreshToken
+    const spotifyApi = new SpotifywebApi({
+      redirectUri: "http://localhost:3000",
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken
+    })
+  
+    spotifyApi
+      .refreshAccessToken()
+      .then(data => {
+        res.json({
+          accessToken: data.body.accessToken,
+          expiresIn: data.body.expiresIn,
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        res.sendStatus(400)
+      })
+  })
+  
+//printing out a welcome message when the api link is visited on the browser
+  app.get('/', (req, res) => {
     res.send(`<h1>Welcome to heroMusic</h1>
               `);
   });
-
-app.get('*', (req, res) => httpResponse(res, {
-    statusCode: 400,
-    status: 'failure',
-    message: 'Oops! Not found',
-  }));
-
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
