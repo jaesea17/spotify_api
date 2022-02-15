@@ -14,8 +14,7 @@ router.get('/', async (req, res) => {
 
 //create new entry for hmusics
 router.post('/', async ( req, res ) => {
-    console.log(req.body)
-    
+
     //preventing saving twice
     try{
         let title = await Music.findOne({title: req.body.title})
